@@ -2,15 +2,15 @@ import random
 
 #roll_in = [iterations, num_dice, game_id, sides_dice, roll_mod, kd_mod, kd_num, rl_mod, rl_num]
 
-iterations = 5
-num_dice = 4
-game_id = 0
-sides_dice = 6 #required
-roll_mod = None
-kd_mod = "d"
-kd_num = 1
-rl_mod = "r"
-rl_num = 8
+iterations = 5   # how many times the rolls happen
+num_dice = 4     # number of dice per roll
+game_id = 0      # Game identifier (not implemented)
+sides_dice = 6   # (required) Number of sides on the die
+roll_mod = None  # Any +/- modifier to the roll
+kd_mod = "d"     # (k)eep or (d)rop high or low
+kd_num = 1       # The number of dice to keep or drop (can be negative) 
+rl_mod = "r"     # (r)aise or (l)ower total roll if it goes beyond threshold
+rl_num = 8       # The raise/lower threshold
 
 roll_dict = {"iterations" : 6}
 roll_print = []
@@ -58,3 +58,5 @@ for x in range(iterations):
     
 for x in roll_print:
     print(x)
+
+
