@@ -28,7 +28,7 @@ for x in range(iterations):
         die_roll.sort()
         if(kd_num is None):
             kd_num = 1
-        if(kd_mod == "k"):
+        if(kd_mod == "k" and not (kd_num <= 0)):
             dice_dropped = die_roll[(num_dice-kd_num):num_dice]
             dice_kept = die_roll[0:(num_dice-kd_num)]
         elif(kd_mod == "d"):
