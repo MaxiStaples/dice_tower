@@ -44,7 +44,7 @@ roll_in = {         # Dictionary defines roll from parameters passed from parser
 # The default roll will populate any parameters left blank in the parser
 default_roll = {    
 'iterations' : 1,   
-'dice_roll': (1, 'd', 20),
+'dice_parameters': (1, 'd', 20),
 'roll_mod' : 0,  
 'kd_mod' : (None, None),    
 'rl_mod' : (None, None)
