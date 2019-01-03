@@ -1,10 +1,45 @@
 import random
+def roll_dice (dice_parameters):
+    num_dice = dice_parameters[0]
+    dice_type = dice_parameters[1]
+    num_faces = dice_parameters[2]
+    for y in range(num_dice):
+        die_roll.append(random.randint(1, num_faces))
+    return (die_roll)
+def keep_drop (die_roll, kd_mod):
+    kd_mode = kd_mod[0]
+    kd_num = kd_mod[1]
+    num_dice = len(die_roll)
+    dice_dropped = []
+    dice_kept = []
+    die_roll.sort()
+    if(kd_num is None):
+        kd_mode = 1
+    if(kd_mode == "k" and kd_num > 0):
+        dice_dropped = die_roll[(num_dice-kd_num):num_dice]
+        dice_kept = die_roll[0:(num_dice-kd_num)]
+    elif(kd_mode == "d"):
+        dice_dropped = die_roll[0:kd_num]
+        dice_kept = die_roll[kd_num:num_dice]
+    kd_print = " Dice Kept: " + str(dice_kept) + " Dice Dropped: " + str(dice_dropped)
+    return(dice_kept, kd_print)
+def raise_lower (total, rl_mod):
+    rl_str = ""
+    rl_mode = rl_mod[0]
+    rl_val = rl_mod[1]
+    if(rl_mode == "r"):
+        if(total < rl_val):
+            total = rl_val
+            rl_str = " Raised to " + str(rl_val)
+    elif(rl_mode == "l"):
+        if(total > rl_val):
+            total = rl_val
+            rl_str = " Lowered to " + str(rl_val)
+    return(total, rl_str)
 
 roll_in = {         # Dictionary defines roll from parameters passed from parser
 'iterations' : 6,   # how many times the rolls happen
-'num_dice' : 4,     # number of dice per roll
-'game_id' : 'd',      # Game identifier (not implemented)
-'sides_dice' : 6,   # (required) Number of sides on the die
+'dice_parameters' : ( 4 , 'd' , 6 ),    #(dice per roll, dice type, number of faces on die)
 'roll_mod' : 0,  # Any +/- modifier to the roll
 'kd_mod' : ( 'd' , 1 ),     # (k)eep or (d)rop high or low; number of dice to keep/drop (can be negative)
 'rl_mod' : ( 'r' , 8 ),     # (r)aise or (l)ower total roll if it goes beyond threshol;, threshold value
@@ -13,9 +48,7 @@ roll_in = {         # Dictionary defines roll from parameters passed from parser
 # The default roll will populate any parameters left blank in the parser
 default_roll = {    
 'iterations' : 1,   
-'num_dice' : 1,     
-'game_id' : 'd',      
-'sides_dice' : 20, 
+'dice_roll': (1, 'd', 20),
 'roll_mod' : 0,  
 'kd_mod' : (None, None),    
 'rl_mod' : (None, None)
@@ -25,44 +58,22 @@ for key in roll_in:
     if not roll_in[key]:
         roll_in[key] = default_roll[key]
 
-
 roll_print = []
-
 for x in range(roll_in['iterations']):
-    die_roll = []
     kd_print, sum_print, rl_print = '', '', ''
-    for y in range(roll_in['num_dice']):
-        die_roll.append(random.randint(1, roll_in['sides_dice']))
-    
+    die_roll = []
+    die_roll = roll_dice(roll_in['dice_parameters'])
     if(roll_in['kd_mod'][0]):
-        dice_dropped = []
-        dice_kept = []
-        die_roll.sort()
-        if(roll_in['kd_mod'][1] is None):
-            roll_in['kd_mod'][1] = 1
-        if(roll_in['kd_mod'][0] == "k" and roll_in['kd_mod'][1] > 0):
-            dice_dropped = die_roll[(roll_in['num_dice']-roll_in['kd_mod'][1]):roll_in['num_dice']]
-            dice_kept = die_roll[0:(roll_in['num_dice']-roll_in['kd_mod'][1])]
-        elif(roll_in['kd_mod'][0] == "d"):
-            dice_dropped = die_roll[0:roll_in['kd_mod'][1]]
-            dice_kept = die_roll[roll_in['kd_mod'][1]:roll_in['num_dice']]
-        kd_print = " Dice Kept: " + str(dice_kept) + " Dice Dropped: " + str(dice_dropped)
+        dice_kept, kd_print = keep_drop(die_roll, roll_in['kd_mod'])
     else:
         dice_kept = die_roll
-            
+    #sum and roll mod functions     
     sum = 0
     for i in dice_kept:
         sum += i 
         sum += roll_in['roll_mod']
     if(roll_in['rl_mod'][0] and roll_in['rl_mod'][1]):
-        if(roll_in['rl_mod'][0] == "r"):
-            if(sum < roll_in['rl_mod'][1]):
-                sum = roll_in['rl_mod'][1]
-                rl_print = " Raised to " + str(roll_in['rl_mod'][1])
-        elif(roll_in['rl_mod'][0] == "l"):
-            if(sum > roll_in['rl_mod'][1]):
-                sum = roll_in['rl_mod'][1]
-                rl_print = " Lowered to " + str(roll_in['rl_mod'][1])
+            sum, rl_print = raise_lower(sum,roll_in['rl_mod'])
     sum_print = "Result: " + str(sum)
     if(roll_in['roll_mod']):
         sum_print = "Result: " +str(sum)+ "  (Modified with " + str(roll_in['roll_mod']) + ")"            
