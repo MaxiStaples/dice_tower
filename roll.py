@@ -1,14 +1,11 @@
 import random
-def roll_dice (dice_parameters):
-    num_dice = dice_parameters[0]
-    dice_type = dice_parameters[1]
-    num_faces = dice_parameters[2]
+def roll_dice (die_roll, dice_parameters):
+    num_dice, dice_type, num_faces = dice_parameters
     for y in range(num_dice):
         die_roll.append(random.randint(1, num_faces))
     return (die_roll)
 def keep_drop (die_roll, kd_mod):
-    kd_mode = kd_mod[0]
-    kd_num = kd_mod[1]
+    kd_mode, kd_num = kd_mod
     num_dice = len(die_roll)
     dice_dropped = []
     dice_kept = []
@@ -25,8 +22,7 @@ def keep_drop (die_roll, kd_mod):
     return(dice_kept, kd_print)
 def raise_lower (total, rl_mod):
     rl_str = ""
-    rl_mode = rl_mod[0]
-    rl_val = rl_mod[1]
+    rl_mode, rl_val = rl_mod
     if(rl_mode == "r"):
         if(total < rl_val):
             total = rl_val
@@ -62,7 +58,7 @@ roll_print = []
 for x in range(roll_in['iterations']):
     kd_print, sum_print, rl_print = '', '', ''
     die_roll = []
-    die_roll = roll_dice(roll_in['dice_parameters'])
+    die_roll = roll_dice(die_roll, roll_in['dice_parameters'])
     if(roll_in['kd_mod'][0]):
         dice_kept, kd_print = keep_drop(die_roll, roll_in['kd_mod'])
     else:
